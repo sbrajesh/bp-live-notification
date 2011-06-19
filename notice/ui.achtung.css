@@ -1,0 +1,112 @@
+/**
+ * achtung 0.3.0
+ * 
+ * Growl-like notifications for jQuery
+ *
+ * Copyright (c) 2009 Josh Varner <josh@voxwerk.com>
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *
+ * Portions of this file are from the jQuery UI CSS framework.
+ *
+ * @license http://www.opensource.org/licenses/mit-license.php
+ * @author Josh Varner <josh@voxwerk.com>
+ */
+
+/* IE 6 doesn't support position: fixed */
+* html #achtung-overlay {
+	position:absolute;
+}
+
+/* IE6 includes padding in width */
+* html .achtung {
+    width: 280px;
+}
+
+#achtung-overlay {
+    overflow: hidden;
+    position: fixed;
+    /*top: 15px;
+    right: 15px;*/
+    bottom:50px;
+    left:50px;
+    width: 280px;
+    z-index:50;
+}
+
+.achtung {
+    display:none;
+    margin-bottom: 8px;
+	padding: 15px 15px;
+	background-color: #333;
+	color: #fff;
+	width: 250px;
+	font-weight: normal;
+	position:relative;
+	overflow: hidden;
+    -moz-box-shadow: #aaa 1px 1px 2px;
+    -webkit-box-shadow: #aaa 1px 1px 2px;
+    box-shadow: #aaa 1px 1px 2px;  
+    -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px;
+    /* Note that if using show/hide animations, IE will lose
+       this setting */
+    opacity: .85;
+    filter:Alpha(Opacity=85);
+}
+
+
+.achtung .achtung-message-icon {
+	margin-top: 0px;
+	margin-left: -.5em;
+	margin-right: .5em;
+    float: left;
+	zoom: 1;
+}
+
+.achtung .ui-icon.achtung-close-button {
+    overflow: hidden;
+    float: right;
+    position: relative;
+    top: -8px;
+    right: -8px;
+    height:14px;
+    font-weight: bold;
+    width:10px;
+    color:#000;
+    cursor: pointer;
+   
+}
+
+.achtung .ui-icon.achtung-close-button-hover {
+   color:#000;
+}
+
+/* Slightly darker for these colors (readability) */
+.achtungSuccess, .achtungFail, .achtungWait {
+    /* Note that if using show/hide animations, IE will lose
+       this setting */
+    opacity: .93; filter:Alpha(Opacity=93);
+}
+.achtung .achtung-message {
+    display: inline;
+}
+.achtung .achtung-message a{
+    color:#fff;
+    text-decoration: none;
+}
