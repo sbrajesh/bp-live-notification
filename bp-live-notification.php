@@ -1,12 +1,12 @@
 <?php
 /* Plugin Name: BuddyPress Live Notification
  * Plugin URI: http://buddydev.com/plugins/buddypress-live-notification/
- * Version: 1.0
+ * Version: 1.0.1
  * Description: Adds a Facebook Like realtime notification for user
  * Author: Brajesh Singh
  * Author URI: http://buddydev.com/members/sbrajesh
  * License: GPL
- * Last Modified: April 06, 2011
+ * Last Modified: September 9, 2011
  * 
  * */
 
@@ -16,8 +16,9 @@ add_action("wp_print_styles","bpln_add_css");
 add_action("admin_print_styles","bpln_add_css");
 
 function bpln_add_css(){
-    if(!is_user_logged_in())
+    if(!is_user_logged_in()||is_admin()&&bpln_disable_in_dashboard())
         return;
+    
     $plugin_url=plugin_dir_url(__FILE__);
     wp_enqueue_style("achtung_css",$plugin_url."notice/ui.achtung.css");
  }
@@ -26,7 +27,7 @@ function bpln_add_css(){
 add_action("wp_print_scripts","bpln_add_js");
 
 function  bpln_add_js(){
-    if(!is_user_logged_in())
+    if(!is_user_logged_in()||is_admin()&&bpln_disable_in_dashboard())
         return;
     $plugin_url=plugin_dir_url(__FILE__);
   //  wp_enqueue_script("achtung",$plugin_url."notice/ui.achtung.js",array("jquery"));
@@ -64,7 +65,7 @@ function bpln_check_notification(){
         $resp["current_ids"]=$notification_ids_current;
         //collect the specific new messages messages
         $resp['messages']=bpln_get_notification_messages($notification_ids_diff);//ignored if change is no
-        $resp['notification_all']=bpden_get_all_notification();//replace all notification in admin bar as we don't have a way to differentiate using any dom technique
+        $resp['notification_all']=bpln_get_all_notification();//replace all notification in admin bar as we don't have a way to differentiate using any dom technique
     }
     else
         $resp["change"]="no";
@@ -75,7 +76,7 @@ function bpln_check_notification(){
 add_action("wp_ajax_bpln_check_notification","bpln_check_notification");
 
 //get all notification for current user
-function bpden_get_all_notification() {
+function bpln_get_all_notification() {
 	global $bp;
 
 	if ( !is_user_logged_in() )
@@ -170,4 +171,7 @@ function bpln_store_ids(){
 <?php
 }
  
+function bpln_disable_in_dashboard(){
+    return apply_filters('bpln_disable_in_dashboard',false);//use this hook to disable notification in the backend
+}
 ?>
