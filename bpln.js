@@ -25,7 +25,10 @@ BPLN_Helper={
                 //if we have change in notifications
                 update_ids(data.current_ids.join(","));//store current ids
                 //update the notification count/message in buddypress admin bar
-               jq("li#bp-adminbar-notifications-menu").replaceWith(data.notification_all);
+                if(jq("li#bp-adminbar-notifications-menu").get(0))
+                    jq("li#bp-adminbar-notifications-menu").replaceWith(data.notification_all);
+                else if(jq('li#wp-admin-bar-bp-notifications').get(0))
+                    jq("li#wp-admin-bar-bp-notifications").html(data.notification_all);
                 //notify using growl style notification, do u have a better bsuggestion ?
               for(var i=0;i<data.messages.length;i++)
                 BPLN_Helper.notify(data.messages[i]);//notify each message

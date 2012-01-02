@@ -1,12 +1,12 @@
 <?php
 /* Plugin Name: BuddyPress Live Notification
  * Plugin URI: http://buddydev.com/plugins/buddypress-live-notification/
- * Version: 1.0.1
+ * Version: 1.0.2
  * Description: Adds a Facebook Like realtime notification for user
  * Author: Brajesh Singh
  * Author URI: http://buddydev.com/members/sbrajesh
  * License: GPL
- * Last Modified: September 9, 2011
+ * Last Modified: January 2, 2012
  * 
  * */
 
@@ -40,7 +40,7 @@ function  bpln_add_js(){
 function bpln_check_notification(){
     if(!is_user_logged_in())
         return;
-	if(!function_exists("bp_is_active"))
+  if(!function_exists("bp_is_active"))
 	return;
     //check_ajax_referer("bpln_check");
     $resp=array();//response array
@@ -81,7 +81,8 @@ function bpln_get_all_notification() {
 
 	if ( !is_user_logged_in() )
 		return false;
-
+if(bp_use_wp_admin_bar())
+    return bpln_get_notifications_for_wpadminbar();
 	$html= '<li id="bp-adminbar-notifications-menu"><a href="' . $bp->loggedin_user->domain . '">';
 	$html.=__( 'Notifications', 'buddypress' );
 
@@ -108,6 +109,39 @@ function bpln_get_all_notification() {
         return $html;
 }
 
+function bpln_get_notifications_for_wpadminbar(){
+    global $bp;
+
+	if ( !is_user_logged_in() )
+		return false;
+  //$html= '<li class="menupop" id="wp-admin-bar-bp-notifications">';
+  $html='<a href="' . $bp->loggedin_user->domain . '" aria-haspopup="true"  class="ab-item">';
+        if ( $notifications = bp_core_get_notifications_for_user( bp_loggedin_user_id(), 'object' ) ) {
+		$menu_title = sprintf( __( 'Notifications <span id="ab-pending-notifications" class="pending-count">%s</span>', 'buddypress' ), count( $notifications ) );
+	} else {
+		$menu_title = __( 'Notifications', 'buddypress' );
+	}
+    $html.=$menu_title;       
+  $html.='</a>';
+  $html.='<div class="ab-sub-wrapper">';
+  $html.='<ul class="ab-submenu" id="wp-admin-bar-bp-notifications-default">';
+  
+  if ( !empty( $notifications ) ) {
+		foreach ( (array)$notifications as $notification ) {
+                   $html.=' <li id="wp-admin-bar-notification-'.$notification->id.'">';
+                   $html.='<a href="'.$notification->href.'" class="ab-item">'.$notification->content.'</a>';
+                   $html.='</li>';
+			
+		}
+	} 
+  		
+     $html.='</ul>';
+     $html.='</div>';
+    // $html.='</li>';
+return $html;
+
+}
+
 //a copy of bp_core_get_notifications_for_user just modified
 function bpln_get_notification_messages($notification_ids){
 if(!is_user_logged_in())
@@ -115,7 +149,7 @@ if(!is_user_logged_in())
   global $bp,$wpdb;
   $list_ids="(".join(",", $notification_ids).")";
   $notifications =$wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$bp->core->table_name_notifications} WHERE id in {$list_ids} AND is_new = 1") );
-
+  $renderable=array();
 
   /* Group notifications by component and component_action and provide totals */
 	for ( $i = 0; $i < count($notifications); $i++ ) {
@@ -140,7 +174,22 @@ if(!is_user_logged_in())
 
 			if ( function_exists( $bp->{$component_name}->format_notification_function ) ) {
 				$renderable[] = call_user_func( $bp->{$component_name}->format_notification_function, $component_action_name, $component_action_items[0]->item_id, $component_action_items[0]->secondary_item_id, $action_item_count );
-			}
+			
+                        } elseif ( isset( $bp->{$component_name}->notification_callback ) && function_exists( $bp->{$component_name}->notification_callback ) ) {
+				
+					$content  = call_user_func( $bp->{$component_name}->notification_callback, $component_action_name, $component_action_items[0]->item_id, $component_action_items[0]->secondary_item_id, $action_item_count, 'array' );
+                                        if ( is_string( $content ) ) {
+						$renderable[] = $content;
+						
+					} else {
+						$renderable[] = $content['text'];
+						
+					}
+                                
+                                        
+                                        
+                                
+                        }               
 		}
 	}
 
