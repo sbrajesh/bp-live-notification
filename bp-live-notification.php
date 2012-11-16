@@ -1,17 +1,17 @@
 <?php
 /* Plugin Name: BuddyPress Live Notification
  * Plugin URI: http://buddydev.com/plugins/buddypress-live-notification/
- * Version: 1.0.2
+ * Version: 1.0.3
  * Description: Adds a Facebook Like realtime notification for user
  * Author: Brajesh Singh
  * Author URI: http://buddydev.com/members/sbrajesh
  * License: GPL
- * Last Modified: January 2, 2012
+ * Last Modified: November 16, 2012
  * 
  * */
 
 
-//load css, we are using modified achtung jquery plugin, so weill load their css
+//load css, we are using modified achtung jquery plugin, so we will load their css
 add_action("wp_print_styles","bpln_add_css");
 add_action("admin_print_styles","bpln_add_css");
 
@@ -71,7 +71,7 @@ function bpln_check_notification(){
         $resp["change"]="no";
 
     echo json_encode($resp);
-    die(0);//for wp admin
+    exit(0);//for wp admin
 }
 add_action("wp_ajax_bpln_check_notification","bpln_check_notification");
 
@@ -83,6 +83,7 @@ function bpln_get_all_notification() {
 		return false;
 if(bp_use_wp_admin_bar())
     return bpln_get_notifications_for_wpadminbar();
+
 	$html= '<li id="bp-adminbar-notifications-menu"><a href="' . $bp->loggedin_user->domain . '">';
 	$html.=__( 'Notifications', 'buddypress' );
 
@@ -172,7 +173,7 @@ if(!is_user_logged_in())
 			if ( $action_item_count < 1 )
 				continue;
 
-			if ( function_exists( $bp->{$component_name}->format_notification_function ) ) {
+			if ( isset($bp->{$component_name}->format_notification_function )&&function_exists( $bp->{$component_name}->format_notification_function ) ) {
 				$renderable[] = call_user_func( $bp->{$component_name}->format_notification_function, $component_action_name, $component_action_items[0]->item_id, $component_action_items[0]->secondary_item_id, $action_item_count );
 			
                         } elseif ( isset( $bp->{$component_name}->notification_callback ) && function_exists( $bp->{$component_name}->notification_callback ) ) {
