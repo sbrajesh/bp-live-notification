@@ -149,7 +149,7 @@ if(!is_user_logged_in())
         return;
   global $bp,$wpdb;
   $list_ids="(".join(",", $notification_ids).")";
-  $notifications =$wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$bp->core->table_name_notifications} WHERE id in {$list_ids} AND is_new = 1") );
+  $notifications =$wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$bp->core->table_name_notifications} WHERE id in {$list_ids} AND is_new = %d"), 1 );
   $renderable=array();
 
   /* Group notifications by component and component_action and provide totals */
