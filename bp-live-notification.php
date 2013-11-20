@@ -1,12 +1,12 @@
 <?php
 /* Plugin Name: BuddyPress Live Notification
  * Plugin URI: http://buddydev.com/plugins/buddypress-live-notification/
- * Version: 1.0.3
+ * Version: 1.0.4
  * Description: Adds a Facebook Like realtime notification for user
  * Author: Brajesh Singh
  * Author URI: http://buddydev.com/members/sbrajesh
  * License: GPL
- * Last Modified: November 16, 2012
+ * Last Modified: November 20, 2013
  * 
  * */
 
