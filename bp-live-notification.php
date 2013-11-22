@@ -34,6 +34,30 @@ function  bpln_add_js(){
     wp_enqueue_script("bpln_js",$plugin_url."bpln.js",array("jquery","json2"));
 }
 
+/**
+ * Loads textdomain
+ */
+add_action ( 'bp_loaded', 'bpln_load_textdomain');
+
+/**
+* Load plugin textdomain for translation
+*/
+function bpln_load_textdomain(){
+
+    $locale = apply_filters( 'bp-live-notification_get_locale', get_locale() );
+    
+    $plugin_url=plugin_dir_url(__FILE__);
+   // if load .mo file
+   if ( !empty( $locale ) ) {
+       $mofile_default = sprintf( '%slanguages/%s.mo',  $plugin_url, $locale );
+       $mofile = apply_filters( 'bp-live-notification_load_textdomain_mofile', $mofile_default );
+
+           if (is_readable( $mofile ) ) 
+               // make sure file exists, and load it
+               load_textdomain( 'bp-live-notification', $mofile );
+   }
+
+}
 
 //handle ajax request
 //main function
@@ -190,7 +214,7 @@ if(!is_user_logged_in())
                                         
                                         
                                 
-                        }               
+            }               
 		}
 	}
 
