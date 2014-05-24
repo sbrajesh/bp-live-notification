@@ -1,40 +1,46 @@
 /*BuddyPress Live Notification Javascript*/
 jQuery(document).ready(function(){
-    var jq=jQuery;
+    var jq = jQuery;
     //on first run, store the ids in the bpln element
-    update_ids(jq.trim(jq("#bpln-notification-ids").text()));//store
+    update_ids( jq.trim( jq( "#bpln-notification-ids" ).text() ) );//store
 
 //BuddyPress Live Notification Helper Object
-BPLN_Helper={
-    interval:0,
-    check_update:function(){
-        BPLN_Helper.reset_interval();//reset interval
+BPLN_Helper = {
+    interval: 0,
+    check_update: function(){
+        
+            BPLN_Helper.reset_interval();//reset interval
             //post data
-            jq.post(ajaxurl,{action: 'bpln_check_notification',
-                                    'cookie': encodeURIComponent(document.cookie),
-                                    //'_wpnonce_post_update': jq("input#_wpnonce_post_update").val(),
-                                    'notification_ids': get_ids()
-            },
-            function(data){
-               BPLN_Helper.set_interval();//set the interval again
-              if(!data)
-                  return;
+            jq.post(ajaxurl,{
+                            action: 'bpln_check_notification',
+                            cookie: encodeURIComponent(document.cookie),
+                            //'_wpnonce_post_update': jq("input#_wpnonce_post_update").val(),
+                            notification_ids: get_ids()
+                            },
+                            
+                        function( data ){
+                          
+                            BPLN_Helper.set_interval();//set the interval again
+                          
+                            if( !data )
+                                return;
 
-              data=JSON.parse(data);
-              if(data.change=="yes"){
-                //if we have change in notifications
-                update_ids(data.current_ids.join(","));//store current ids
-                //update the notification count/message in buddypress admin bar
-                if(jq("li#bp-adminbar-notifications-menu").get(0))
-                    jq("li#bp-adminbar-notifications-menu").replaceWith(data.notification_all);
-                else if(jq('li#wp-admin-bar-bp-notifications').get(0))
-                    jq("li#wp-admin-bar-bp-notifications").html(data.notification_all);
-                //notify using growl style notification, do u have a better bsuggestion ?
-              for(var i=0;i<data.messages.length;i++)
-                BPLN_Helper.notify(data.messages[i]);//notify each message
-            }
+                          //data = JSON.parse( data );
+                          
+                          if( data.change == 'yes' ){
+                                //if we have change in notifications
+                                update_ids( data.current_ids.join(",") );//store current ids
+                                //update the notification count/message in buddypress admin bar
+                                if( jq("li#bp-adminbar-notifications-menu").get(0) )
+                                    jq("li#bp-adminbar-notifications-menu").replaceWith( data.notification_all );
+                                else if(jq('li#wp-admin-bar-bp-notifications').get(0))
+                                    jq("li#wp-admin-bar-bp-notifications").html(data.notification_all);
+                                //notify using growl style notification, do u have a better bsuggestion ?
+                              for(var i=0;i<data.messages.length;i++)
+                                BPLN_Helper.notify(data.messages[i]);//notify each message
+                        }
 
-    });//end of post
+                }, 'json' );//end of post
 },
 
     set_interval:function(){

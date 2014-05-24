@@ -1,37 +1,39 @@
 <?php
 /* Plugin Name: BuddyPress Live Notification
  * Plugin URI: http://buddydev.com/plugins/buddypress-live-notification/
- * Version: 1.0.4
+ * Version: 1.0.5
  * Description: Adds a Facebook Like realtime notification for user
  * Author: Brajesh Singh
  * Author URI: http://buddydev.com/members/sbrajesh
  * License: GPL
- * Last Modified: November 20, 2013
+ * Last Modified: May 25, 2014
  * 
  * */
 
 
 //load css, we are using modified achtung jquery plugin, so we will load their css
-add_action("wp_print_styles","bpln_add_css");
-add_action("admin_print_styles","bpln_add_css");
+add_action( 'wp_print_styles', 'bpln_add_css' );
+add_action( 'admin_print_styles', 'bpln_add_css' );
 
 function bpln_add_css(){
-    if(!is_user_logged_in()||is_admin()&&bpln_disable_in_dashboard())
+    if( !is_user_logged_in() || is_admin() && bpln_disable_in_dashboard() )
         return;
     
-    $plugin_url=plugin_dir_url(__FILE__);
-    wp_enqueue_style("achtung_css",$plugin_url."notice/ui.achtung.css");
+    $plugin_url = plugin_dir_url( __FILE__ );
+    wp_enqueue_style( 'achtung_css', $plugin_url . 'notice/ui.achtung.css' );
  }
 
 //load javascript
-add_action("wp_print_scripts","bpln_add_js");
+add_action( 'wp_print_scripts', 'bpln_add_js' );
 
 function  bpln_add_js(){
-    if(!is_user_logged_in()||is_admin()&&bpln_disable_in_dashboard())
+    
+    if( !is_user_logged_in() || is_admin() && bpln_disable_in_dashboard() )
         return;
-    $plugin_url=plugin_dir_url(__FILE__);
+    
+    $plugin_url = plugin_dir_url( __FILE__ );
   //  wp_enqueue_script("achtung",$plugin_url."notice/ui.achtung.js",array("jquery"));
-    wp_enqueue_script("bpln_js",$plugin_url."bpln.js",array("jquery","json2"));
+    wp_enqueue_script( 'bpln_js', $plugin_url . 'bpln.js', array( 'jquery', 'json2' ) );
 }
 
 /**
@@ -62,42 +64,45 @@ function bpln_load_textdomain(){
 //handle ajax request
 //main function
 function bpln_check_notification(){
-    if(!is_user_logged_in())
+    
+    if( !is_user_logged_in() )
+            return;
+  
+    if( !function_exists( 'bp_is_active' ) )
         return;
-  if(!function_exists("bp_is_active"))
-	return;
     //check_ajax_referer("bpln_check");
-    $resp=array();//response array
+    $resp = array();//response array
 
-    $ids=$_POST['notification_ids'];
+    $ids = $_POST['notification_ids'];
 
-    if(empty($ids))
-        $notification_ids_old=array();
+    if( empty( $ids ) )
+        $notification_ids_old = array();
     else
-        $notification_ids_old=explode(",", $ids);
+        $notification_ids_old = explode( ',', $ids );
 
-    $notification_ids_current=bpln_get_all_notification_ids(bp_loggedin_user_id());
+    $notification_ids_current = bpln_get_all_notification_ids( bp_loggedin_user_id() );
     
-    $notification_ids_diff=array_diff($notification_ids_current, $notification_ids_old);//difference between the current i
+    $notification_ids_diff = array_diff( $notification_ids_current, $notification_ids_old );//difference between the current i
     
-    if(!$notification_ids_diff)
-        $notification_ids_diff=array_diff($notification_ids_old,$notification_ids_current);
-    $count_new=count($notification_ids_diff);
+    if( !$notification_ids_diff )
+        $notification_ids_diff = array_diff( $notification_ids_old, $notification_ids_current );
+    
+    $count_new = count( $notification_ids_diff );
    
-    if($count_new>0){//we have notifications
-        $resp["change"]="yes";
-        $resp["current_ids"]=$notification_ids_current;
+    if( $count_new>0 ){//we have notifications
+        $resp["change"] = "yes";
+        $resp["current_ids"] = $notification_ids_current;
         //collect the specific new messages messages
-        $resp['messages']=bpln_get_notification_messages($notification_ids_diff);//ignored if change is no
-        $resp['notification_all']=bpln_get_all_notification();//replace all notification in admin bar as we don't have a way to differentiate using any dom technique
-    }
-    else
+        $resp['messages'] = bpln_get_notification_messages( $notification_ids_diff );//ignored if change is no
+        $resp['notification_all'] = bpln_get_all_notification();//replace all notification in admin bar as we don't have a way to differentiate using any dom technique
+    }else{
         $resp["change"]="no";
-
-    echo json_encode($resp);
+    }    
+    echo json_encode( $resp );
+    
     exit(0);//for wp admin
 }
-add_action("wp_ajax_bpln_check_notification","bpln_check_notification");
+add_action( 'wp_ajax_bpln_check_notification', 'bpln_check_notification' );
 
 //get all notification for current user
 function bpln_get_all_notification() {
@@ -105,33 +110,35 @@ function bpln_get_all_notification() {
 
 	if ( !is_user_logged_in() )
 		return false;
-if(bp_use_wp_admin_bar())
-    return bpln_get_notifications_for_wpadminbar();
+    
+    if( bp_use_wp_admin_bar() )
+        return bpln_get_notifications_for_wpadminbar();
 
-	$html= '<li id="bp-adminbar-notifications-menu"><a href="' . $bp->loggedin_user->domain . '">';
-	$html.=__( 'Notifications', 'buddypress' );
+	$html   = '<li id="bp-adminbar-notifications-menu"><a href="' . $bp->loggedin_user->domain . '">';
+	$html   .= __( 'Notifications', 'buddypress' );
 
 	if ( $notifications = bp_core_get_notifications_for_user( $bp->loggedin_user->id ) )
-            $html.="<span>".count( $notifications )."</span>";
+            $html .="<span>".count( $notifications )."</span>";
 
 
-	$html.= '</a><ul>';
+	$html .= '</a><ul>';
 
 	if ( $notifications ) {
 		$counter = 0;
-		for ( $i = 0; $i < count($notifications); $i++ ) {
+		for ( $i = 0; $i < count( $notifications ); $i++ ) {
 			$alt = ( 0 == $counter % 2 ) ? ' class="alt"' : '';
-			$html.="<li {$alt} >". $notifications[$i] ."</li>";
+			$html .="<li {$alt} >". $notifications[$i] ."</li>";
 			 $counter++;
 		}
-	}
- else
-    $html.="<li><a href='".$bp->loggedin_user->domain."'>".__( 'No new notifications.', 'buddypress' )."</a></li>";
+	}else {
+    
+        $html.="<li><a href='".$bp->loggedin_user->domain."'>".__( 'No new notifications.', 'buddypress' )."</a></li>";
+    }
 
 
-
-	$html.= '</ul></li>';
-        return $html;
+	$html .= '</ul></li>';
+        
+    return $html;
 }
 
 function bpln_get_notifications_for_wpadminbar(){
@@ -139,8 +146,9 @@ function bpln_get_notifications_for_wpadminbar(){
 
 	if ( !is_user_logged_in() )
 		return false;
-  //$html= '<li class="menupop" id="wp-admin-bar-bp-notifications">';
-  $html='<a href="' . $bp->loggedin_user->domain . '" aria-haspopup="true"  class="ab-item">';
+    
+    //$html= '<li class="menupop" id="wp-admin-bar-bp-notifications">';
+    $html='<a href="' . $bp->loggedin_user->domain . '" aria-haspopup="true"  class="ab-item">';
         if ( $notifications = bp_core_get_notifications_for_user( bp_loggedin_user_id(), 'object' ) ) {
 		$menu_title = sprintf( __( 'Notifications <span id="ab-pending-notifications" class="pending-count">%s</span>', 'buddypress' ), count( $notifications ) );
 	} else {
@@ -248,4 +256,3 @@ function bpln_store_ids(){
 function bpln_disable_in_dashboard(){
     return apply_filters('bpln_disable_in_dashboard',false);//use this hook to disable notification in the backend
 }
-?>

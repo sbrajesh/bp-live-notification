@@ -2,8 +2,8 @@
 Contributors: sbrajesh,buddydev,anusharma
 Tags: buddypress, notifications, live
 Requires at least: BuddyPress 1.5
-Tested up to: BuddyPress 1.8.1
-Stable tag: 1.0.4
+Tested up to: BuddyPress 2.0.1
+Stable tag: 1.0.5
 License: GPLv2 
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -41,6 +41,8 @@ No, It needs you to have BuddyPress Installed and activated
 
 == Changelog ==
 
+= 1.0.5 =
+1. Updated for properly handling json response. 
 = 1.0.4 =
 
 == Other Notes ==
