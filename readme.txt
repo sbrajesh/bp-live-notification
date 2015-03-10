@@ -1,9 +1,9 @@
 === BuddyPress Live Notification ===
 Contributors: sbrajesh,buddydev,anusharma
 Tags: buddypress, notifications, live
-Requires at least: BuddyPress 1.5
-Tested up to: BuddyPress 2.0.1
-Stable tag: 1.0.5
+Requires at least: BuddyPress 1.9
+Tested up to: BuddyPress 2.2.1
+Stable tag: 2.0.0
 License: GPLv2 
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -11,10 +11,11 @@ BuddyPress Live Notification  adds a Facebook Like realtime notification for use
 
 == Description ==
 
-BuddyPress Live Notification  adds a Facebook Like realtime notification for user.
+BuddyPress Live Notification  adds a Facebook Like real-time notification for user.
 
 = How it works:- =
-Show live notifications to other members.
+Shows live notifications to other members on a BuddyPress based social network. The new and improved version uses WordPress heartbeat api to fetch notifications
+ and allows a theme author to implement their own ui for notifying the update. 
 
 Please do let us know your thoughts & suggestion on our blog [BuddyDev](http://buddydev.com/plugins/buddypress-live-notification/)
 
@@ -32,7 +33,10 @@ This section describes how to install the plugin and get it working.
 == Frequently Asked Questions ==
 
 = Does This plugin works without BuddyPress =
-No, It needs you to have BuddyPress Installed and activated
+No, It needs you to have BuddyPress installed and activated and the BuddyPress notifications component must be enabled
+
+= Where Do I Ask for support? =
+Please visit [BuddyDev](http://buddydev.com/plugins/buddypress-live-notification/) for support.
 
 == Screenshots ==
 
@@ -40,6 +44,11 @@ No, It needs you to have BuddyPress Installed and activated
 1. This shows live update of notification bar screenshot-2.png
 
 == Changelog ==
+
+= 2.0.0 =
+1. Complete rewrite for better code and efficiency. 
+1. Uses WordPress heartbeat api instead of long polling via the ajax. 
+1. Allows theme authors to replace the inbuilt notification UI with a different one . 
 
 = 1.0.5 =
 1. Updated for properly handling json response. 
