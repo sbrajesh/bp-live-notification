@@ -1,9 +1,9 @@
 === BuddyPress Live Notification ===
-Contributors: sbrajesh,buddydev,anusharma
-Tags: buddypress, notifications, live
-Requires at least: BuddyPress 1.9
-Tested up to: BuddyPress 2.2.1
-Stable tag: 2.0.0
+Contributors: buddydev,anusharma,sbrajesh
+Tags: buddypress, notifications, buddypress-live-notification
+Requires at least: 4.5
+Tested up to: 4.7.4
+Stable tag: 2.0.1
 License: GPLv2 
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -17,7 +17,7 @@ BuddyPress Live Notification  adds a Facebook Like real-time notification for us
 Shows live notifications to other members on a BuddyPress based social network. The new and improved version uses WordPress heartbeat api to fetch notifications
  and allows a theme author to implement their own ui for notifying the update. 
 
-Please do let us know your thoughts & suggestion on our blog [BuddyDev](http://buddydev.com/plugins/buddypress-live-notification/)
+Please do let us know your thoughts & suggestion on our blog [BuddyDev](https://buddydev.com/plugins/buddypress-live-notification/)
 
 == Installation ==
 
@@ -36,7 +36,7 @@ This section describes how to install the plugin and get it working.
 No, It needs you to have BuddyPress installed and activated and the BuddyPress notifications component must be enabled
 
 = Where Do I Ask for support? =
-Please visit [BuddyDev](http://buddydev.com/plugins/buddypress-live-notification/) for support.
+Please visit [BuddyDev](https://buddydev.com/plugins/buddypress-live-notification/) for support.
 
 == Screenshots ==
 
@@ -44,6 +44,9 @@ Please visit [BuddyDev](http://buddydev.com/plugins/buddypress-live-notification
 1. This shows live update of notification bar screenshot-2.png
 
 == Changelog ==
+= 2.0.1 =
+1. Compatibility with BuddyPress 2.8.2
+1. Code improvement
 
 = 2.0.0 =
 1. Complete rewrite for better code and efficiency. 
