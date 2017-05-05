@@ -79,19 +79,7 @@ class BP_Live_Notification_Helper {
 	 *
 	 */
 	public function load_textdomain() {
-
-		$locale = apply_filters( 'bp-live-notification_get_locale', get_locale() );
-
-
-		if ( ! empty( $locale ) ) {
-
-			$mofile = sprintf( '%slanguages/%s.mo', $this->path, $locale );
-
-			if ( is_readable( $mofile ) ) {
-				load_textdomain( 'bp-live-notification', $mofile );
-			}
-		}
-
+	   load_plugin_textdomain( 'bp-live-notification', false, dirname( plugin_basename(__FILE__ ) ) .'/languages' );
 	}
 
 	public function get_js_settings() {
