@@ -31,11 +31,51 @@ function bpln_get_new_notifications( $user_id, $last_notified ) {
 	$components_list = implode( ',', $components_list );
 
 
-	$query = "SELECT * FROM {$table} WHERE user_id = %d AND component_name IN ({$components_list}) AND date_notified > %s AND is_new = %d ";
+	$query = "SELECT * FROM {$table} WHERE user_id = %d AND component_name IN ({$components_list}) AND id > %d AND is_new = %d ";
 
 	$query = $wpdb->prepare( $query, $user_id, $last_notified, 1 );
 
 	return $wpdb->get_results( $query );
+}
+
+/**
+ * Get the last notification id for the user
+ *
+ * @global type $wpdb
+ *
+ * @param type $user_id
+ *
+ * @return type
+ */
+function bpln_get_latest_notification_id( $user_id = false ) {
+
+	if ( ! $user_id ) {
+		$user_id = get_current_user_id();
+	}
+
+	global $wpdb;
+
+	$bp = buddypress();
+
+	$table = $bp->notifications->table_name;
+
+	$registered_components = bp_notifications_get_registered_components();
+
+
+	$components_list = array();
+
+	foreach ( $registered_components as $component ) {
+		$components_list[] = $wpdb->prepare( '%s', $component );
+	}
+
+	$components_list = implode( ',', $components_list );
+
+
+	$query = "SELECT MAX(id) FROM {$table} WHERE user_id = %d AND component_name IN ({$components_list}) AND is_new = %d ";
+
+	$query = $wpdb->prepare( $query, $user_id, 1 );
+
+	return (int) $wpdb->get_var( $query );
 }
 
 
