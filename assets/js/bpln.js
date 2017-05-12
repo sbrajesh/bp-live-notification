@@ -68,6 +68,7 @@ jq( document ).on('bpln:new_notifications', function(evt, data ){
 	if( data.count && data.count>0 ){
 	
 		update_count_text( jq('#ab-pending-notifications'), data.count );
+		jq('#ab-pending-notifications').removeClass('no-alert').addClass('alert');
 		
 		var my_act_notification_menu = jq('#wp-admin-bar-my-account-notifications > a span');
 		//if the count menu does not exis
@@ -89,6 +90,7 @@ jq( document ).on('bpln:new_notifications', function(evt, data ){
 		
 		if( list_parent.get(0) ) {
 			
+			jq('#wp-admin-bar-no-notifications').hide();
 			list_parent.append("<li>"+data.messages.join("</li><li>") + "</li>"  );
 			
 			
