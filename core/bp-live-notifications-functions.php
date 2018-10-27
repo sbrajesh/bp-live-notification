@@ -1,14 +1,17 @@
 <?php
 
+// No direct access.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit( 0 );
+}
+
 /**
  * Get all new notifications after a given time for the current user
  *
- * @global type $wpdb
+ * @param int    $user_id user id
+ * @param string $last_notified last notified time.
  *
- * @param type $user_id
- * @param type $last_notified
- *
- * @return type
+ * @return array
  */
 
 function bpln_get_new_notifications( $user_id, $last_notified ) {
@@ -41,13 +44,11 @@ function bpln_get_new_notifications( $user_id, $last_notified ) {
 /**
  * Get the last notification id for the user
  *
- * @global type $wpdb
+ * @param int $user_id user id.
  *
- * @param type $user_id
- *
- * @return type
+ * @return int
  */
-function bpln_get_latest_notification_id( $user_id = false ) {
+function bpln_get_latest_notification_id( $user_id = 0 ) {
 
 	if ( ! $user_id ) {
 		$user_id = get_current_user_id();
@@ -82,6 +83,9 @@ function bpln_get_latest_notification_id( $user_id = false ) {
 /**
  * Get a list of processed messages
  *
+ * @param array $notifications notifications array.
+ *
+ * @return array
  */
 function bpln_get_notification_messages( $notifications ) {
 
@@ -98,8 +102,6 @@ function bpln_get_notification_messages( $notifications ) {
 		$notification = $notifications[ $i ];
 
 		$messages[] = bpln_get_the_notification_description( $notification );
-
-
 	}
 
 	return $messages;
@@ -110,9 +112,9 @@ function bpln_get_notification_messages( $notifications ) {
  *
  * @see bp_get_the_notification_description
  *
- * @param type $notification
+ * @param stdClass $notification
  *
- * @return type
+ * @return string
  */
 
 function bpln_get_the_notification_description( $notification ) {
@@ -135,7 +137,11 @@ function bpln_get_the_notification_description( $notification ) {
 			$notification->component_action,
 			$notification->item_id,
 			$notification->secondary_item_id,
-			1
+			1,
+			'string',
+			$notification->component_action, // Duplicated so plugins can check the canonical action name.
+			$notification->component_name,
+			$notification->id,
 		) );
 	}
 
@@ -150,6 +156,5 @@ function bpln_get_the_notification_description( $notification ) {
 }
 
 function bpln_disable_in_dashboard() {
-
 	return apply_filters( 'bpln_disable_in_dashboard', false );//use this hook to disable notification in the backend
 }

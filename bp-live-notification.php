@@ -1,6 +1,7 @@
 <?php
 
-/* Plugin Name: BuddyPress Live Notification
+/**
+ * Plugin Name: BuddyPress Live Notification
  * Plugin URI: https://buddydev.com/plugins/buddypress-live-notification/
  * Version: 2.0.2
  * Description: Adds a Facebook Like realtime notification for user on a BuddyPress based social network
@@ -8,12 +9,18 @@
  * Author URI: https://buddydev.com
  * License: GPL
  *
- * */
+ **/
 
+// No direct access.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit( 0 );
+}
 
 class BP_Live_Notification_Helper {
+
 	/**
-	 *
+	 * Singleton instance.
+     *
 	 * @var BP_Live_Notification_Helper
 	 */
 	private static $instance;
@@ -28,17 +35,17 @@ class BP_Live_Notification_Helper {
 
 		add_action( 'bp_include', array( $this, 'load' ) );
 
-		add_action( 'bp_loaded', array( $this, 'load_textdomain' ) );
+		add_action( 'bp_loaded', array( $this, 'load_translations' ) );
 
 		add_action( 'bp_enqueue_scripts', array( $this, 'load_css' ) );
 		add_action( 'bp_enqueue_scripts', array( $this, 'load_js' ) );
 
 		add_action( 'wp_head', array( $this, 'add_js_global' ) );
-
 	}
 
 	/**
-	 *
+	 * Get the singleton.
+     *
 	 * @return BP_Live_Notification_Helper
 	 */
 	public static function get_instance() {
@@ -48,13 +55,10 @@ class BP_Live_Notification_Helper {
 		}
 
 		return self::$instance;
-
-
 	}
 
 	/**
 	 * Load core files
-	 *
 	 */
 	public function load() {
 
@@ -62,12 +66,10 @@ class BP_Live_Notification_Helper {
 			return;
 		}
 
-
 		$files = array(
-			'functions.php',
-			'ajax.php',
+			'bp-live-notifications-functions.php',
+			'bp-live-notifications-ajax-handler.php',
 		);
-
 
 		foreach ( $files as $file ) {
 			require_once $this->path . $file;
@@ -76,9 +78,8 @@ class BP_Live_Notification_Helper {
 
 	/**
 	 * Load translation file
-	 *
 	 */
-	public function load_textdomain() {
+	public function load_translations() {
 	   load_plugin_textdomain( 'bp-live-notification', false, dirname( plugin_basename(__FILE__ ) ) .'/languages' );
 	}
 
@@ -86,15 +87,14 @@ class BP_Live_Notification_Helper {
 
 		return apply_filters( 'bpln_get_js_settings', array(
 			'timeout'       => 10,
-			//timeou in 10 seconds
+			// timeout in 10 seconds
 			'last_notified' => bpln_get_latest_notification_id(),
-			//please do not change last_notified as we use it to filter the new notifications
+			// please do not change last_notified as we use it to filter the new notifications
 		) );
 	}
 
 	/**
 	 * Load required js
-	 *
 	 */
 	public function load_js() {
 
@@ -116,7 +116,6 @@ class BP_Live_Notification_Helper {
 
 	/**
 	 * Load CSS file
-	 *
 	 */
 	public function load_css() {
 
@@ -130,7 +129,6 @@ class BP_Live_Notification_Helper {
 
 		wp_register_style( 'achtung_css', $this->url . 'assets/vendors/achtung/ui.achtung.css' );
 		wp_enqueue_style( 'achtung_css' );
-
 	}
 
 	/**
@@ -145,7 +143,6 @@ class BP_Live_Notification_Helper {
 		<?php
 	}
 
-
 	public function is_active() {
 
 		if ( bp_is_active( 'notifications' ) ) {
@@ -154,8 +151,6 @@ class BP_Live_Notification_Helper {
 
 		return false;
 	}
-
-
 }
 
 BP_Live_Notification_Helper::get_instance();
