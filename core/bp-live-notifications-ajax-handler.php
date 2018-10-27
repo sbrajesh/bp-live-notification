@@ -1,5 +1,4 @@
 <?php
-
 // No direct access.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit( 0 );
@@ -16,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function bpln_process_notification_request( $response, $data, $screen_id ) {
 
-	if (  ! isset( $data['bpln-data'] ) ) {
+	if ( ! isset( $data['bpln-data'] ) ) {
 		return $response;
 	}
 
@@ -41,8 +40,10 @@ function bpln_process_notification_request( $response, $data, $screen_id ) {
 	// find the max id that we are sending with this request.
 	$last_notified_id = max( $notification_ids );
 
-	$response['bpln-data'] = array( 'messages' => $notifications, 'last_notified' => $last_notified_id );
-
+	$response['bpln-data'] = array(
+		'messages'      => $notifications,
+		'last_notified' => $last_notified_id,
+	);
 
 	return $response;
 }

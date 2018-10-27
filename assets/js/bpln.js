@@ -53,9 +53,12 @@ jQuery(document).ready(function ($) {
 
 //a theme author can override the bpln.notify and that will be used instead of the bundled notification system
     bpln.notify = notify;
-    bpln.get_count = function get_count() {
+
+    bpln.getCount = function get_count() {
         return _newNotificationsCount;
     };
+
+    bpln.get_count = bpln.getCount; // backward compatibility.
 
     $(document).on('bpln:new_notifications', function (evt, data) {
 
@@ -120,5 +123,7 @@ jQuery(document).ready(function ($) {
             $element.text('' + currentCount);
         });
     }
+
+    bpln.updateCount = updateCountText;
 
 });//end of $(document).ready()

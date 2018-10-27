@@ -1,5 +1,4 @@
 <?php
-
 // No direct access.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit( 0 );
@@ -8,12 +7,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Get all new notifications after a given time for the current user
  *
- * @param int    $user_id user id
+ * @param int    $user_id user id.
  * @param string $last_notified last notified time.
  *
  * @return array
  */
-
 function bpln_get_new_notifications( $user_id, $last_notified ) {
 
 	global $wpdb;
@@ -112,16 +110,15 @@ function bpln_get_notification_messages( $notifications ) {
  *
  * @see bp_get_the_notification_description
  *
- * @param stdClass $notification
+ * @param stdClass $notification notification object.
  *
  * @return string
  */
-
 function bpln_get_the_notification_description( $notification ) {
 
 	$bp = buddypress();
 
-	// Callback function exists
+	// Callback function exists.
 	if ( isset( $bp->{$notification->component_name}->notification_callback ) && is_callable( $bp->{$notification->component_name}->notification_callback ) ) {
 		$description = call_user_func( $bp->{$notification->component_name}->notification_callback, $notification->component_action, $notification->item_id, $notification->secondary_item_id, 1 );
 
@@ -129,7 +126,7 @@ function bpln_get_the_notification_description( $notification ) {
 	} elseif ( isset( $bp->{$notification->component_name}->format_notification_function ) && function_exists( $bp->{$notification->component_name}->format_notification_function ) ) {
 		$description = call_user_func( $bp->{$notification->component_name}->format_notification_function, $notification->component_action, $notification->item_id, $notification->secondary_item_id, 1 );
 
-		// Allow non BuddyPress components to hook in
+		// Allow non BuddyPress components to hook in.
 	} else {
 
 		/** This filter is documented in bp-notifications/bp-notifications-functions.php */
@@ -148,13 +145,17 @@ function bpln_get_the_notification_description( $notification ) {
 	/**
 	 * Filters the full-text description for a specific notification.
 	 *
-	 * @since BuddyPress (1.9.0)
-	 *
 	 * @param string $description Full-text description for a specific notification.
 	 */
 	return apply_filters( 'bp_get_the_notification_description', $description );
 }
 
+/**
+ * Should we disable it in dashboard.
+ *
+ * @return bool
+ */
 function bpln_disable_in_dashboard() {
-	return apply_filters( 'bpln_disable_in_dashboard', false );//use this hook to disable notification in the backend
+	// use this hook to disable notification in the backend.
+	return apply_filters( 'bpln_disable_in_dashboard', false );
 }
