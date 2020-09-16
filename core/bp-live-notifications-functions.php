@@ -97,15 +97,13 @@ function bpln_get_notification_messages( $notifications ) {
 
 	$avatar = '';
 	for ( $i = 0; $i < $total_notifications; $i ++ ) {
-		$notification_id = $notifications[ $i ];
+		$notification = $notifications[ $i ];
 
 		if ( defined( 'BP_PLATFORM_VERSION' ) ) {
-		    $notification = bp_notifications_get_notification( $notification_id );
+			$avatar = bpln_get_notification_avatar( $notification );
+		}
 
-		    $avatar = bpln_get_notification_avatar( $notification );
-        }
-
-		$messages[] = $avatar . bpln_get_the_notification_description( $notification_id );
+		$messages[] = $avatar . bpln_get_the_notification_description( $notification );
 	}
 
 	return $messages;
