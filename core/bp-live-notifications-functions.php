@@ -77,16 +77,14 @@ function bpln_get_latest_notification_id( $user_id = 0 ) {
 	return (int) $wpdb->get_var( $query );
 }
 
-
 /**
- * Get a list of processed messages
+ * Get notifications messages
  *
- * @param array $notifications notifications array.
+ * @param array $notifications Notifications array.
  *
  * @return array
  */
-function bpln_get_notification_messages( $notifications ) {
-
+function _bpln_get_notification_messages( $notifications ) {
 	$messages = array();
 
 	if ( empty( $notifications ) ) {
@@ -96,17 +94,30 @@ function bpln_get_notification_messages( $notifications ) {
 	$total_notifications = count( $notifications );
 
 	$avatar = '';
+	$class  = 'bpln-buddypress';
 	for ( $i = 0; $i < $total_notifications; $i ++ ) {
 		$notification = $notifications[ $i ];
 
 		if ( defined( 'BP_PLATFORM_VERSION' ) ) {
 			$avatar = bpln_get_notification_avatar( $notification );
+			$class  = 'bpln-buddyboss';
 		}
 
-		$messages[] = $avatar . bpln_get_the_notification_description( $notification );
+		$messages[] = '<div class="' . $class . '">' . $avatar . bpln_get_the_notification_description( $notification ) . '</div>';
 	}
 
 	return $messages;
+}
+
+/**
+ * Get a list of processed messages
+ *
+ * @param array $notifications notifications array.
+ *
+ * @return array
+ */
+function bpln_get_notification_messages( $notifications ) {
+	return _bpln_get_notification_messages( $notifications );
 }
 
 /**
