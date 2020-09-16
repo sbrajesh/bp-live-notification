@@ -95,11 +95,17 @@ function bpln_get_notification_messages( $notifications ) {
 
 	$total_notifications = count( $notifications );
 
+	$avatar = '';
 	for ( $i = 0; $i < $total_notifications; $i ++ ) {
+		$notification_id = $notifications[ $i ];
 
-		$notification = $notifications[ $i ];
+		if ( defined( 'BP_PLATFORM_VERSION' ) ) {
+		    $notification = bp_notifications_get_notification( $notification_id );
 
-		$messages[] = bpln_get_the_notification_description( $notification );
+		    $avatar = bpln_get_notification_avatar( $notification );
+        }
+
+		$messages[] = $avatar . bpln_get_the_notification_description( $notification_id );
 	}
 
 	return $messages;
@@ -158,4 +164,65 @@ function bpln_get_the_notification_description( $notification ) {
 function bpln_disable_in_dashboard() {
 	// use this hook to disable notification in the backend.
 	return apply_filters( 'bpln_disable_in_dashboard', false );
+}
+
+/**
+ * Get notification avatar
+ *
+ * @param BP_Notifications_Notification $notification notification object.
+ * @param int                           $avatar_size Avatar size.
+ *
+ * @return string
+ */
+function bpln_get_notification_avatar( $notification, $avatar_size = 30 ) {
+	$component = $notification->component_name;
+
+	$item_id = '';
+
+	switch ( $component ) {
+		case 'groups':
+			if ( ! empty( $notification->item_id ) ) {
+				$item_id = $notification->item_id;
+				$object  = 'group';
+			}
+			break;
+		case 'follow':
+		case 'friends':
+			if ( ! empty( $notification->item_id ) ) {
+				$item_id = $notification->item_id;
+				$object  = 'user';
+			}
+			break;
+		default:
+			if ( ! empty( $notification->secondary_item_id ) ) {
+				$item_id = $notification->secondary_item_id;
+				$object  = 'user';
+			} else {
+				$item_id = $notification->item_id;
+				$object  = 'user';
+			}
+			break;
+	}
+
+	if ( ! $item_id || ! $object ) {
+		return '';
+	}
+
+	ob_start();
+
+	if ( $object === 'group' ) {
+		$group = new BP_Groups_Group( $item_id );
+		$link  = bp_get_group_permalink( $group );
+	} else {
+		$user = new WP_User( $item_id );
+		$link = bp_core_get_user_domain( $user->ID, $user->user_nicename, $user->user_login );
+	}
+
+	?>
+		<a href="<?php echo $link ?>">
+			<?php echo bp_core_fetch_avatar( [ 'item_id' => $item_id, 'object' => $object, 'width' => $avatar_size ] ); ?>
+		</a>
+	<?php
+
+	return ob_get_clean();
 }
