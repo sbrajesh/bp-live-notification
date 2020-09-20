@@ -117,6 +117,6 @@
     align-items: center;
 }
 
-.bpln-notification-message a:first-child {
+.bpln-notification-message a.bpln-item-avatar {
     margin-right: 5px;
 }
