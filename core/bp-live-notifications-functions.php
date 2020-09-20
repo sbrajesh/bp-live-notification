@@ -93,17 +93,20 @@ function _bpln_get_notification_messages( $notifications ) {
 
 	$total_notifications = count( $notifications );
 
-	$avatar = '';
-	$class  = 'bpln-buddypress';
+	$class  = 'bpln-notification-message bpln-buddypress';
 	for ( $i = 0; $i < $total_notifications; $i ++ ) {
 		$notification = $notifications[ $i ];
 
 		if ( defined( 'BP_PLATFORM_VERSION' ) ) {
-			$avatar = bpln_get_notification_avatar( $notification );
-			$class  = 'bpln-buddyboss';
+			$class  = 'bpln-notification-message bpln-buddyboss';
 		}
+		$avatar  = bpln_get_notification_avatar( $notification );
+		$message = bpln_get_the_notification_description( $notification );
 
-		$messages[] = '<div class="' . $class . '">' . $avatar . bpln_get_the_notification_description( $notification ) . '</div>';
+		$messages[] =  array(
+		        'plain' => $message,
+                'html' => '<div class="' . $class . '">' . $avatar . $message . '</div>'
+        );
 	}
 
 	return $messages;
@@ -217,19 +220,16 @@ function bpln_get_notification_avatar( $notification, $avatar_size = 30 ) {
 		return '';
 	}
 
-	ob_start();
-
 	if ( $object === 'group' ) {
-		$group = new BP_Groups_Group( $item_id );
-		$link  = bp_get_group_permalink( $group );
+		$link  = bp_get_group_permalink( new BP_Groups_Group( $item_id ) );
 	} else {
-		$user = new WP_User( $item_id );
-		$link = bp_core_get_user_domain( $user->ID, $user->user_nicename, $user->user_login );
+		$link = bp_core_get_user_domain( $item_id );
 	}
 
+	ob_start();
 	?>
-		<a href="<?php echo $link ?>">
-			<?php echo bp_core_fetch_avatar( [ 'item_id' => $item_id, 'object' => $object, 'width' => $avatar_size ] ); ?>
+		<a href="<?php echo $link ?>" class="bpln-item-avatar">
+			<?php echo bp_core_fetch_avatar( array( 'item_id' => $item_id, 'object' => $object, 'width' => $avatar_size ) ); ?>
 		</a>
 	<?php
 

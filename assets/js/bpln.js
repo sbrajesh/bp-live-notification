@@ -21,7 +21,7 @@ jQuery(document).ready(function ($) {
             }
 
             for (var i = 0; i < messages.length; i++) {
-                bpln.notify(messages[i]);
+                bpln.notify(messages[i].html);
             }
 
             // fire custom event bpln:new_notifications.
@@ -80,7 +80,11 @@ jQuery(document).ready(function ($) {
             var $listParent = $('#wp-admin-bar-bp-notifications-default');
 
             if ($listParent.length) {
-                $listParent.append("<li>" + data.messages.join("</li><li>") + "</li>");
+                var strMarkup = '';
+                for (var i = 0; i < data.messages.length; i++) {
+                    strMarkup += "<li>" + data.messages[i].plain + '</li>';
+                }
+                $listParent.append(strMarkup);
             }
         }
     });
