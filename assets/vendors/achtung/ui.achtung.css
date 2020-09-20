@@ -110,3 +110,13 @@
     color:#fff;
     text-decoration: none;
 }
+
+/* custom css for layout */
+.bpln-notification-message {
+    display: flex;
+    align-items: center;
+}
+
+.bpln-notification-message a:first-child {
+    margin-right: 5px;
+}
