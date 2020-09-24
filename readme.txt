@@ -2,8 +2,8 @@
 Contributors: buddydev,anusharma,sbrajesh
 Tags: buddypress, notifications, buddypress-live-notification
 Requires at least: 4.5
-Tested up to: 4.9.8
-Stable tag: 2.1.0
+Tested up to: 5.5.1
+Stable tag: 2.1.1
 License: GPLv2 
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -45,6 +45,9 @@ Please visit [BuddyDev](https://buddydev.com/support/forums/) for support.
 1. This shows live update of notification bar screenshot-2.png
 
 == Changelog ==
+= 2.1.1 =
+1. Changed notification to use the avatar of the context item( e.g contains avatar+message).
+
 = 2.1.0 =
 1. Tested with BuddyPress 3.2
 1. Code improvement
